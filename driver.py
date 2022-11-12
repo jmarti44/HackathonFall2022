@@ -3,23 +3,28 @@ import cv2
 import mediapipe as mp
 
 class handDetector():
-    def __init__(self, mode=False, maxHands=1, modelComplexity=1, detectionCon=0.5, trackCon=0.5):
+    def __init__(self, mode=False, maxHands=2, modelComplexity=1, detectionCon=0.5, trackCon=0.5):
         self.mode = mode
         self.maxHands = maxHands
         self.modelComplexity = modelComplexity
         self.detectionCon = detectionCon
         self.trackCon = trackCon
+        self.handType = []
  
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(self.mode, self.maxHands, self.modelComplexity, self.detectionCon, self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
  
     def findHands(self, img, draw=True):
+        self.handType = []
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(imgRGB)
         # print(results.multi_hand_landmarks)
  
         if self.results.multi_hand_landmarks:
+            for hand in self.results.multi_handedness:
+                self.handType.append(hand.classification[0].label)
+                # print("left/right: {0}".format(hand.classification[0].label))
             for handLms in self.results.multi_hand_landmarks:
                 if draw:
                     self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)
