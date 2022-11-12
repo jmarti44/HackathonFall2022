@@ -22,8 +22,9 @@ while cap.isOpened():
     land_mark_list = detector.findPosition(image, draw=False)
 
     if len(land_mark_list) != 0:
-        if (len(detector.handType) > 1):
-            continue
+        # if (len(detector.handType) > 1):
+        #     continue
+        # print(detector.handType)
         if (len(detector.handType) == 1):
             if (detector.handType[0] == "Left"):
                 x1, y1 = land_mark_list[4][1], land_mark_list[4][2]
@@ -52,12 +53,11 @@ while cap.isOpened():
                 x2, y2 = land_mark_list[0][1], land_mark_list[0][2]
                 x3, y3 = land_mark_list[4][1], land_mark_list[4][2]
                 x4, y4 = land_mark_list[20][1], land_mark_list[20][2]
-
                 stop_right1 = math.hypot(x4 - x3, y4 - y3)
                 stop_right2 = math.hypot(x2 - x1, y2 - y1)
                 skip = math.hypot(x2 - x1, y2 - y1)
-                print("log: {0}".format(stop_right1))
-                print("log: {0}".format(stop_right2))
+                # print("log: {0}".format(stop_right1))
+                # print("log: {0}".format(stop_right2))
                 if (stop_right1 < 250 and stop_right2 < 400):
                     osascript.osascript("""tell application "Spotify" to pause""")
                     time.sleep(1)
@@ -70,6 +70,14 @@ while cap.isOpened():
                 elif (stop_right1 > 400 and stop_right2 < 450):
                     osascript.osascript("""tell application "Spotify" to previous track""")
                     time.sleep(2)
+        # elif(len(detector.handType) == 2):
+            # print("Two")
+            # osascript.osascript("""tell application "Spotify" play track spotify:tsrack:3EZTyh1wJEmreJH1aULPCj""")
+            # osascript.osascript("""tell application "System Events" to sleep""")
+            # time.sleep(2)
+            # osascript.osascript("""tell application "System Events" to activate""")
+        else:
+            continue
 
     current_time = time.time()
     fps = 1 / (current_time - previous_time)
